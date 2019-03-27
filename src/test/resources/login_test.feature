@@ -1,11 +1,8 @@
-Feature: Check login
-  User with valid name should successful login
+#language:ru
+Свойство: : логин пользователя
 
-  Scenario: user have valid login and password
-    * Open main page
-    * Click Log In button
-    * Open login page
-    * enter credantials
-    * check that he is signed in
-    * log out
-    * close browser
+  Сценарий: user have valid login and password
+    * он открывает приложение в браузере
+    * открывается страница "Главная страница"
+    * он (засовывает палец в жопу)
+    * нажимаем кнопку 'Войти в почту'
