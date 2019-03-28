@@ -1,7 +1,12 @@
 package ru.tw1911.testforsber.util;
 
-import org.openqa.selenium.WebDriver;
-import ru.tw1911.testforsber.pages.AbstractPage;
+        import org.openqa.selenium.WebDriver;
+        import org.reflections.Reflections;
+        import ru.tw1911.testforsber.annotations.PageTitle;
+        import ru.tw1911.testforsber.pages.AbstractPage;
+
+        import java.util.Optional;
+        import java.util.Set;
 
 public class PageFactory {
     WebDriver driver;
@@ -18,5 +23,22 @@ public class PageFactory {
             e.printStackTrace();
             throw e;
         }
+    }
+
+    public AbstractPage getInstanceByTitle(String pageTitle){
+        Reflections reflections = new Reflections("ru.tw1911.testforsber.pages");
+        Set<Class<?>> pages = reflections.getTypesAnnotatedWith(PageTitle.class);
+        Optional<Class<?>> cpage = pages.stream()
+                .filter(page -> page.getAnnotation(PageTitle.class).value().equals(pageTitle))
+                .findAny();
+        Class pageClazz = cpage.get();
+        try {
+            return (AbstractPage) pageClazz.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

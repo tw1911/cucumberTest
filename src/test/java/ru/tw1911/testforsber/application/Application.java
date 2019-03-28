@@ -24,10 +24,6 @@ public class Application {
     }
 
 
-
-
-
-
     @И("^открывается страница \"([^\"]*)\"$")
     public void assignPage(String pageName){
         System.out.println(pageName);
