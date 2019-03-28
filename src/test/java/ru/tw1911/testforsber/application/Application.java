@@ -4,14 +4,11 @@ import cucumber.api.java.ru.И;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import ru.tw1911.testforsber.annotations.PageAction;
-import ru.tw1911.testforsber.pages.MainPage;
 import ru.tw1911.testforsber.util.Init;
 import ru.tw1911.testforsber.pages.AbstractPage;
 import ru.tw1911.testforsber.util.PageFactory;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.List;
 
 public class Application {
     private WebDriver driver;
@@ -26,10 +23,10 @@ public class Application {
 
     @И("^открывается страница \"([^\"]*)\"$")
     public void assignPage(String pageName){
-        System.out.println(pageName);
-        this.page = pageFactory.getInstance(MainPage.class);
-        System.out.println(page.getClass().getCanonicalName());
-
+//        System.out.println(pageName);
+//        this.page = pageFactory.getInstance(MainPage.class);
+//        System.out.println(page.getClass().getCanonicalName());
+        this.page=pageFactory.getInstanceByTitle(pageName);
     }
 
     @И("^он \\(([^\"]*)\\)$")
@@ -49,6 +46,7 @@ public class Application {
     }
 
     private void invokeAction(String actionName){
+        System.out.println(page.getClass().getCanonicalName());
         Method[] methods = page.getClass().getMethods();
         Method action;
         for (Method method:methods){

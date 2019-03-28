@@ -5,6 +5,7 @@ package ru.tw1911.testforsber.util;
         import ru.tw1911.testforsber.annotations.PageTitle;
         import ru.tw1911.testforsber.pages.AbstractPage;
 
+        import java.lang.reflect.InvocationTargetException;
         import java.util.Optional;
         import java.util.Set;
 
@@ -28,15 +29,20 @@ public class PageFactory {
     public AbstractPage getInstanceByTitle(String pageTitle){
         Reflections reflections = new Reflections("ru.tw1911.testforsber.pages");
         Set<Class<?>> pages = reflections.getTypesAnnotatedWith(PageTitle.class);
-        Optional<Class<?>> cpage = pages.stream()
+        Optional<Class<?>> titledClass = pages.stream()
                 .filter(page -> page.getAnnotation(PageTitle.class).value().equals(pageTitle))
                 .findAny();
-        Class pageClazz = cpage.get();
+        Class pageClazz = titledClass.get();
+        System.out.println(pageClazz.getCanonicalName());
         try {
-            return (AbstractPage) pageClazz.newInstance();
+            return (AbstractPage) pageClazz.getDeclaredConstructor(WebDriver.class).newInstance(driver);
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
         return null;
