@@ -16,10 +16,6 @@ public class MainPage extends AbstractPage{
         super(driver);
     }
 
-    public void open(){
-        driver.get("https://yandex.ru");
-    }
-
     @PageAction("нажимает кнопку \"Войти в почту\"")
     public void clickLoginButton(){
 
