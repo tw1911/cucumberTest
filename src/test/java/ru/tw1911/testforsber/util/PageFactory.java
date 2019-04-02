@@ -33,18 +33,19 @@ public class PageFactory {
                 .filter(page -> page.getAnnotation(PageTitle.class).value().equals(pageTitle))
                 .findAny();
         Class pageClazz = titledClass.get();
-        System.out.println(pageClazz.getCanonicalName());
-        try {
-            return (AbstractPage) pageClazz.getDeclaredConstructor(WebDriver.class).newInstance(driver);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return null;
+        //System.out.println(pageClazz.getCanonicalName());
+//        AbstractPage page;
+//        try {
+//            Object obj = pageClazz.getDeclaredConstructor(WebDriver.class).newInstance(driver);
+//        } catch (InstantiationException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchMethodException e) {
+//            e.printStackTrace();
+//        } catch (InvocationTargetException e) {
+//            e.printStackTrace();
+//        }
+        return (AbstractPage) org.openqa.selenium.support.PageFactory.initElements(driver, pageClazz);
     }
 }

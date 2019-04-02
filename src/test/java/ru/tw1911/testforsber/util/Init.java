@@ -2,6 +2,9 @@ package ru.tw1911.testforsber.util;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.picocontainer.DefaultPicoContainer;
+import org.picocontainer.MutablePicoContainer;
+import ru.tw1911.testforsber.entity.User;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,6 +16,8 @@ public class Init {
     String login;
     String password;
     String browser;
+
+    MutablePicoContainer container;
 
     public Init(){
         this.driver = new ChromeDriver();
@@ -32,6 +37,9 @@ public class Init {
         } catch (IOException e) {
             System.err.println("ОШИБКА: Файл свойств отсуствует!");
         }
+
+        this.container = new DefaultPicoContainer();
+        container.addComponent(new User(login,password));
     }
 
     public WebDriver getDriver() {

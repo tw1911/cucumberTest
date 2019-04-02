@@ -1,5 +1,6 @@
 package ru.tw1911.testforsber.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -16,13 +17,9 @@ public class MainPage extends AbstractPage{
         super(driver);
     }
 
-    @PageAction("нажимает кнопку \"Войти в почту\"")
+    @PageAction("нажимает кнопку Войти в почту")
     public void clickLoginButton(){
-
-    }
-
-    @PageAction("засовывает палец в жопу")
-    public void stickFingerInAss(){
-        System.out.println("Палец в жопе!");
+        loginButton.click();
+        System.out.println("Кнопка нажата");
     }
 }

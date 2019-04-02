@@ -1,6 +1,7 @@
 package ru.tw1911.testforsber;
 
 import cucumber.api.CucumberOptions;
+import cucumber.api.SnippetType;
 import cucumber.api.junit.Cucumber;
 import org.junit.runner.RunWith;
 
@@ -9,7 +10,8 @@ import org.junit.runner.RunWith;
         features = "src/test/features"
         ,glue={"ru.tw1911.testforsber.application"}
         ,plugin = {"pretty"}
-
+        ,tags = {"@Login"}
+        ,snippets = SnippetType.CAMELCASE
 )
 public class Runner {
 }

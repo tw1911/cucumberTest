@@ -53,11 +53,9 @@ public class LoginTests {
 //        driver.findElement(By.xpath("//a[.//text()='Войти в почту']")).click();
 //        driver.findElement(By.name("login")).sendKeys(login);
 //        driver.findElement(By.xpath("//button[.//text()='Войти']")).click();
-//        //new WebDriverWait(driver,5).until(driver1 -> driver1.findElement(By.id("passp-field-passwd")));
 //        driver.findElement(By.id("passp-field-passwd")).sendKeys(password);
 //        driver.findElement(By.xpath("//button[.//text()='Войти']")).click();
-//        String actualLogin = driver.findElement(By.className("mail-User-Name")).getText();
-//        Assert.assertEquals(actualLogin,login);
+
 //        driver.findElement(By.className("mail-User-Name")).click();
 //        driver.findElement(By.xpath("//a[text()='Выйти из сервисов Яндекса']")).click();
     }
