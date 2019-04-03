@@ -2,8 +2,11 @@ package ru.tw1911.testforsber.util;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.picocontainer.DefaultPicoContainer;
 import org.picocontainer.MutablePicoContainer;
+import org.picocontainer.injectors.MultiInjection;
 import ru.tw1911.testforsber.entity.User;
 
 import java.io.FileInputStream;
@@ -12,39 +15,43 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class Init {
-    WebDriver driver;
-    String login;
-    String password;
-    String browser;
-
     MutablePicoContainer container;
+    Properties properties;
 
     public Init(){
-        this.driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-
         FileInputStream fis;
-        Properties property = new Properties();
-
+        properties = new Properties();
         try {
             fis = new FileInputStream("src/test/resources/application.properties");
-            property.load(fis);
-
-            login = property.getProperty("app.login");
-            password = property.getProperty("app.password");
-            browser = property.getProperty("test.browser");
+            properties.load(fis);
             fis.close();
         } catch (IOException e) {
             System.err.println("ОШИБКА: Файл свойств отсуствует!");
         }
 
-        this.container = new DefaultPicoContainer();
-        container.addComponent(new User(login,password));
+        this.container = new DefaultPicoContainer(new MultiInjection());
+        container.addComponent(createUser());
+        container.addComponent(createDriver());
     }
 
-    public WebDriver getDriver() {
+    public MutablePicoContainer getContainer(){
+        return container;
+    }
+
+    private User createUser(){
+        return new User(properties.getProperty("app.login"),properties.getProperty("app.password"));
+    }
+
+    private WebDriver createDriver(){
+        String browser = properties.getProperty("test.browser");
+        WebDriver driver;
+        switch (browser){
+            case "chrome":{ driver = new ChromeDriver(); break;}
+            case "firefox": { driver = new FirefoxDriver(); break;}
+            case "ie": { driver = new InternetExplorerDriver(); break;}
+            default: driver = new ChromeDriver();
+        }
+        driver.manage().timeouts().implicitlyWait(10,TimeUnit.SECONDS);
         return driver;
     }
-
-
 }

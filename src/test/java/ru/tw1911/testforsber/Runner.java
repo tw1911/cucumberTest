@@ -3,6 +3,7 @@ package ru.tw1911.testforsber;
 import cucumber.api.CucumberOptions;
 import cucumber.api.SnippetType;
 import cucumber.api.junit.Cucumber;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
@@ -14,4 +15,9 @@ import org.junit.runner.RunWith;
         ,snippets = SnippetType.CAMELCASE
 )
 public class Runner {
+
+    @Test
+    public void loginTest(){
+
+    }
 }

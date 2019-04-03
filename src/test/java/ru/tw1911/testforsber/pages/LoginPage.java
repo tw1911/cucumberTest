@@ -17,24 +17,18 @@ public class LoginPage extends AbstractPage{
     @FindBy(name = "login")
     private WebElement loginInput;
 
-    @FindBy(name = "password")
+    @FindBy(name = "passwd")
     private WebElement passwordInput;
 
     @FindBy(xpath = "//button[.//text()='Войти']")
     private WebElement loginButton;
 
-    public LoginPage(WebDriver driver) {
-        super(driver);
-    }
-
     @PageAction("вводит логин и пароль из настроек")
     public void enterLoginAndPassword(){
-        //loginInput.sendKeys(user.getLogin());
-        loginInput.sendKeys("111111111111");
+        loginInput.sendKeys(user.getLogin());
 
         loginButton.click();
         passwordInput.sendKeys(user.getPassword());
-        passwordInput.sendKeys("1111111111");
 
         loginButton.click();
     }

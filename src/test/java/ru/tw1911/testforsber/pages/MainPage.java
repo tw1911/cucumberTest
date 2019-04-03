@@ -13,13 +13,8 @@ public class MainPage extends AbstractPage{
     @FindBy(xpath = "//a[.//text()='Войти в почту']")
     private WebElement loginButton;
 
-    public MainPage(WebDriver driver){
-        super(driver);
-    }
-
     @PageAction("нажимает кнопку Войти в почту")
     public void clickLoginButton(){
         loginButton.click();
-        System.out.println("Кнопка нажата");
     }
 }
