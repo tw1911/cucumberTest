@@ -39,7 +39,7 @@ public class PageFactory {
         if (container.getComponent(pageClazz) == null) {
             container.addComponent(pageClazz);
             AbstractPage ap = (AbstractPage) container.getComponent(pageClazz);
-            org.openqa.selenium.support.PageFactory.initElements(driver, ap);
+            org.openqa.selenium.support.PageFactory.initElements(container.getComponent(CustomFieldDecorator.class), ap);
             return ap;
         } else return (AbstractPage) container.getComponent(pageClazz);
     }
