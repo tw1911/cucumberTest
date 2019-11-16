@@ -1,13 +1,8 @@
 package ru.tw1911.testforsber.application;
 
-import com.google.j2objc.annotations.ReflectionSupport;
 import cucumber.api.java.ru.И;
-import lombok.extern.java.Log;
-import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.picocontainer.MutablePicoContainer;
-import org.reflections.Reflections;
 import ru.tw1911.testforsber.annotations.PageAction;
 import ru.tw1911.testforsber.util.Init;
 import ru.tw1911.testforsber.pages.AbstractPage;
@@ -15,10 +10,7 @@ import ru.tw1911.testforsber.util.PageFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Collection;
 
-@Log
 public class Application {
     AbstractPage page = null;
     PageFactory pageFactory;
@@ -60,7 +52,7 @@ public class Application {
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
-                    log.info("Не удалось вызвать метод: " + actionName);
+                    //log.info("Не удалось вызвать метод: " + actionName);
                     e.printStackTrace();
                 }
                 break;
