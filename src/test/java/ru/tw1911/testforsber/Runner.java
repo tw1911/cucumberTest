@@ -11,13 +11,9 @@ import org.junit.runner.RunWith;
         features = "src/test/features"
         ,glue={"ru.tw1911.testforsber.application"}
         ,plugin = {"pretty"}
-        , tags = {"@Cart"}
+        , tags = {"@Login"}
         ,snippets = SnippetType.CAMELCASE
 )
 public class Runner {
 
-    @Test
-    public void cartTest() {
-
-    }
 }

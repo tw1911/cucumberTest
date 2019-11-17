@@ -16,7 +16,6 @@ public class PageFactory {
 
     public <TPage extends AbstractPage> TPage getInstance(Class<TPage> pageClass) {
         try {
-            //Initialize the Page with its elements and return it.
             return org.openqa.selenium.support.PageFactory.initElements(driver, pageClass);
         } catch (Exception e) {
             e.printStackTrace();

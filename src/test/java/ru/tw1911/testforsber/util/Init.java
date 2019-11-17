@@ -9,6 +9,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.picocontainer.DefaultPicoContainer;
 import org.picocontainer.MutablePicoContainer;
 import org.picocontainer.injectors.MultiInjection;
+import ru.tw1911.testforsber.entity.AppConfig;
 import ru.tw1911.testforsber.entity.User;
 
 import java.io.FileInputStream;
@@ -19,8 +20,8 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class Init {
-    MutablePicoContainer container;
-    Properties properties;
+    private MutablePicoContainer container;
+    private Properties properties;
 
     public Init(){
         FileInputStream fis;
@@ -36,6 +37,7 @@ public class Init {
         this.container = new DefaultPicoContainer(new MultiInjection());
         container.addComponent(createUser());
         container.addComponent(createDriver());
+        container.addComponent(createAppConfig());
         container.addComponent(CustomFieldDecorator.class);
     }
 
@@ -44,7 +46,13 @@ public class Init {
     }
 
     private User createUser(){
-        return new User(properties.getProperty("app.login"),properties.getProperty("app.password"));
+        return new User(properties.getProperty("app.user.login"),properties.getProperty("app.user.password"));
+    }
+
+    private AppConfig createAppConfig(){
+        AppConfig appConfig = new AppConfig();
+        appConfig.setUrl(properties.getProperty("app.url"));
+        return appConfig;
     }
 
     private WebDriver createDriver(){
@@ -64,7 +72,6 @@ public class Init {
                             URI.create("http://localhost:4444/wd/hub").toURL(),
                             capabilitie
                     );
-                    //driver.manage().window().setSize(new Dimension(1280, 1024));
                     return driver;
                 } catch (MalformedURLException e) {
                     throw new RuntimeException(e);

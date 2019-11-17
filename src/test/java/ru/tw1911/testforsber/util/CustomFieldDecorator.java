@@ -29,7 +29,7 @@ public class CustomFieldDecorator extends DefaultFieldDecorator {
             }
 
             Object element = createElement(loader, locator, decoratableClass);
-            PageFactory.initElements(this, element);
+//            PageFactory.initElements(this, element);
             return element;
         }
         return super.decorate(loader, field);

@@ -4,6 +4,7 @@ import cucumber.api.java.ru.И;
 import org.openqa.selenium.WebDriver;
 import org.picocontainer.MutablePicoContainer;
 import ru.tw1911.testforsber.annotations.PageAction;
+import ru.tw1911.testforsber.entity.AppConfig;
 import ru.tw1911.testforsber.pages.AbstractPage;
 import ru.tw1911.testforsber.util.Init;
 import ru.tw1911.testforsber.util.PageFactory;
@@ -12,13 +13,17 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class Application {
-    AbstractPage page = null;
-    PageFactory pageFactory;
-    MutablePicoContainer container;
+    private AbstractPage page = null;
+    private PageFactory pageFactory;
+    private MutablePicoContainer context;
+    private AppConfig appConfig;
+    private WebDriver driver;
 
-    public Application(Init initt) {
-        this.container = initt.getContainer();
-        this.pageFactory = new PageFactory(container);
+    public Application(Init init) {
+        this.context = init.getContainer();
+        this.pageFactory = new PageFactory(context);
+        appConfig= context.getComponent(AppConfig.class);
+        driver= context.getComponent(WebDriver.class);
     }
 
 
@@ -39,13 +44,13 @@ public class Application {
 
     @И("^он открывает приложение в браузере$")
     public void openPage() {
-        container.getComponent(WebDriver.class).get("https://demo.litecart.net/");
+        driver.get(appConfig.getUrl());
     }
 
     @И("^закрывает браузер$")
     public void closeBrowser() {
-        container.getComponent(WebDriver.class).quit();
-        container.removeComponent(WebDriver.class);
+        context.getComponent(WebDriver.class).quit();
+        context.removeComponent(WebDriver.class);
     }
 
     private void invokeAction(String actionName) {
@@ -54,9 +59,7 @@ public class Application {
             if (method.isAnnotationPresent(PageAction.class) && method.getAnnotation(PageAction.class).value().equals(actionName)) {
                 try {
                     method.invoke(page);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
+                } catch (InvocationTargetException | IllegalAccessException e) {
                     //log.info("Не удалось вызвать метод: " + actionName);
                     e.printStackTrace();
                 }
