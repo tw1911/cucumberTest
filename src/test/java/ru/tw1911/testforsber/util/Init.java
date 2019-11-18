@@ -65,8 +65,6 @@ public class Init {
             case "selenoid": {
                 DesiredCapabilities capabilitie = new DesiredCapabilities();
                 capabilitie.setBrowserName("chrome");
-                //browser.setCapability("enableVNC", true);
-
                 try {
                     driver = new RemoteWebDriver(
                             URI.create("http://localhost:4444/wd/hub").toURL(),
