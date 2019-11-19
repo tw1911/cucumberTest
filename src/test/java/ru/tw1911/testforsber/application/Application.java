@@ -11,6 +11,7 @@ import ru.tw1911.testforsber.util.PageFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 public class Application {
     private AbstractPage page = null;
@@ -27,53 +28,59 @@ public class Application {
     }
 
 
-    @И("^открывается страница \"([^\"]*)\"$")
+    @И("открывается страница {string}")
     public void assignPage(String pageName) {
         this.page = pageFactory.getInstanceByTitle(pageName);
     }
 
-    @И("^он \\(([^\"]*)\\)$")
+    @И("он \\({})")
     public void invokePageAction(String actionName) {
         invokeAction(actionName);
     }
 
-    @И("^он \\((.*?)\\) \"([^\"]*)\"$")
+    @И("он \\({}) {string}")
     public void invokePageActionWithOneParam(String actionName, String param1) {
         invokeAction(actionName, param1);
     }
 
-    @И("^он открывает приложение в браузере$")
+    @И("он \\({}) {string} {string}")
+    public void invokePageActionWithTwoParams(String actionName, String param1, String param2) {
+        invokeAction(actionName, param1, param2);
+    }
+
+    @И("он открывает приложение в браузере")
     public void openPage() {
         driver.get(appConfig.getUrl());
     }
 
-    @И("^закрывает браузер$")
+    @И("закрывает браузер")
     public void closeBrowser() {
         context.getComponent(WebDriver.class).quit();
         context.removeComponent(WebDriver.class);
     }
 
-    private void invokeAction(String actionName) {
-        Method[] methods = page.getClass().getMethods();
-        for (Method method : methods) {
-            if (method.isAnnotationPresent(PageAction.class) && method.getAnnotation(PageAction.class).value().equals(actionName)) {
-                try {
-                    method.invoke(page);
-                } catch (InvocationTargetException | IllegalAccessException e) {
-                    //log.info("Не удалось вызвать метод: " + actionName);
-                    e.printStackTrace();
-                }
-                break;
-            }
-        }
-    }
+//    private void invokeAction(String actionName) {
+//        Method[] methods = page.getClass().getMethods();
+//        for (Method method : methods) {
+//            if (method.isAnnotationPresent(PageAction.class) && method.getAnnotation(PageAction.class).value().equals(actionName)) {
+//                try {
+//                    method.invoke(page);
+//                } catch (InvocationTargetException | IllegalAccessException e) {
+//                    //log.info("Не удалось вызвать метод: " + actionName);
+//                    e.printStackTrace();
+//                }
+//                break;
+//            }
+//        }
+//    }
 
-    private void invokeAction(String actionName, String arg1) {
+    private void invokeAction(String actionName, String ... args) {
         Method[] methods = page.getClass().getMethods();
         for (Method method : methods) {
             if (method.isAnnotationPresent(PageAction.class) && method.getAnnotation(PageAction.class).value().equals(actionName)) {
                 try {
-                    method.invoke(page, arg1);
+                    Object[] arr = args.clone();
+                    method.invoke(page, arr);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {

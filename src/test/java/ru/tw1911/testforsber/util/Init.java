@@ -39,6 +39,7 @@ public class Init {
         container.addComponent(createDriver());
         container.addComponent(createAppConfig());
         container.addComponent(CustomFieldDecorator.class);
+        container.addComponent(new SimpleStack<String>());
     }
 
     public MutablePicoContainer getContainer(){

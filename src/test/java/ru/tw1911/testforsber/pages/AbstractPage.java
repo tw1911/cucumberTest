@@ -6,6 +6,7 @@ import org.reflections.scanners.FieldAnnotationsScanner;
 import ru.tw1911.testforsber.annotations.PageAction;
 import ru.tw1911.testforsber.annotations.ElementTitle;
 import ru.tw1911.testforsber.elements.WebButton;
+import ru.tw1911.testforsber.elements.WebInput;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -26,6 +27,20 @@ public class AbstractPage {
         }
 
         System.out.println("Нажимает кнопку:" +  buttonName);
+    }
+
+    @PageAction("вводит значение в поле")
+    public void enterValueInField(final String value, final String fieldName) {
+        Field inputField = getFieldWithTypeAndTitle(fieldName, WebInput.class);
+        inputField.setAccessible(true);
+        try {
+            WebInput input = (WebInput) inputField.get(this);
+            input.sendKeys(value);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Воводит значение:" + value+" в поле: "+fieldName );
     }
 
     private Field getFieldWithTypeAndTitle(String title, Class clazz){
