@@ -2,25 +2,29 @@ package ru.tw1911.testforsber.util;
 
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.DefaultElementLocatorFactory;
 import org.openqa.selenium.support.pagefactory.DefaultFieldDecorator;
 import org.openqa.selenium.support.pagefactory.ElementLocator;
+import ru.tw1911.testforsber.elements.IElement;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.*;
+import java.util.List;
 
 public class CustomFieldDecorator extends DefaultFieldDecorator {
-
     public CustomFieldDecorator(SearchContext searchContext) {
         super(new DefaultElementLocatorFactory(searchContext));
     }
 
     /**
-     * Метод вызывается фабрикой для каждого поля в классе
+     *      * Метод вызывается фабрикой для каждого поля в классе
+     *      
      */
     @Override
     public Object decorate(ClassLoader loader, Field field) {
-        Class<?> decoratableClass = decoratableClass(field);
+        Class<IElement> decoratableClass = decoratableClass(field);
         // если класс поля декорируемый
         if (decoratableClass != null) {
             ElementLocator locator = factory.createLocator(field);
@@ -28,53 +32,74 @@ public class CustomFieldDecorator extends DefaultFieldDecorator {
                 return null;
             }
 
-            Object element = createElement(loader, locator, decoratableClass);
-//            PageFactory.initElements(this, element);
-            return element;
+            if (List.class.isAssignableFrom(field.getType())) {
+                return createList(loader, locator, decoratableClass);
+            }
+
+            return createElement(loader, locator, decoratableClass);
         }
         return super.decorate(loader, field);
     }
 
     /**
-     * Возвращает декорируемый класс поля,
-     * либо null если класс не подходит для декоратора
+     *      * Возвращает декорируемый класс поля,
+     *      * либо null если класс не подходит для декоратора
+     *      
      */
-    private Class<?> decoratableClass(Field field) {
+    @SuppressWarnings("unchecked")
+    private Class<IElement> decoratableClass(Field field) {
 
         Class<?> clazz = field.getType();
 
-        // у элемента должен быть конструктор, принимающий WebElement
-        try {
-            clazz.getConstructor(WebElement.class);
-        } catch (Exception e) {
+        if (List.class.isAssignableFrom(clazz)) {
+
+            // для списка обязательно должна быть задана аннотация
+            if (field.getAnnotation(FindBy.class) == null &&
+                    field.getAnnotation(FindBys.class) == null) {
+                return null;
+            }
+            // Список должен быть параметризирован
+            Type genericType = field.getGenericType();
+            if (!(genericType instanceof ParameterizedType)) {
+                return null;
+            }
+            // получаем класс для элементов списка
+            clazz = (Class<?>) ((ParameterizedType) genericType).
+                    getActualTypeArguments()[0];
+        }
+        if (IElement.class.isAssignableFrom(clazz)) {
+            return (Class<IElement>) clazz;
+        } else {
             return null;
         }
-
-        return clazz;
     }
 
     /**
-     * Создание элемента.
-     * Находит WebElement и передает его в кастомный класс
+     *      * Создание элемента.
+     *      * Находит WebElement и передает его в кастомный класс
+     *      
      */
-    protected <T> T createElement(ClassLoader loader,
-                                  ElementLocator locator, Class<T> clazz) {
+    protected IElement createElement(ClassLoader loader,
+                                     ElementLocator locator,
+                                     Class<IElement> clazz) {
         WebElement proxy = proxyForLocator(loader, locator);
-        return createInstance(clazz, proxy);
+        return WrapperFactory.createInstance(clazz, proxy);
     }
 
     /**
-     * Создает экземпляр класса,
-     * вызывая конструктор с аргументом WebElement
+     *      * Создание списка
+     *      
      */
-    private <T> T createInstance(Class<T> clazz, WebElement element) {
-        try {
-            return (T) clazz.getConstructor(WebElement.class)
-                    .newInstance(element);
-        } catch (Exception e) {
-            throw new AssertionError(
-                    "WebElement can't be represented as " + clazz
-            );
-        }
+    @SuppressWarnings("unchecked")
+    protected List<IElement> createList(ClassLoader loader,
+                                        ElementLocator locator,
+                                        Class<IElement> clazz) {
+
+        InvocationHandler handler =
+                new LocatingCustomElementListHandler(locator, clazz);
+        List<IElement> elements =
+                (List<IElement>) Proxy.newProxyInstance(
+                        loader, new Class[]{List.class}, handler);
+        return elements;
     }
 }

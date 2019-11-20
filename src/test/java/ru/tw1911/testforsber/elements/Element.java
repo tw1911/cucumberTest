@@ -4,7 +4,7 @@ import org.openqa.selenium.*;
 
 import java.util.List;
 
-public class Element implements WebElement {
+public class Element implements IElement, WebElement {
     protected WebElement webElement;
 
     public Element(WebElement webElement) {
@@ -95,6 +95,4 @@ public class Element implements WebElement {
     public <X> X getScreenshotAs(OutputType<X> target) throws WebDriverException {
         return webElement.getScreenshotAs(target);
     }
-
-    // универсальные методы для всех элементов
 }
