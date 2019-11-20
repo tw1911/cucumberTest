@@ -1,10 +1,10 @@
 package ru.tw1911.testforsber.pages;
 
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import ru.tw1911.testforsber.annotations.ElementTitle;
 import ru.tw1911.testforsber.annotations.PageAction;
 import ru.tw1911.testforsber.annotations.PageTitle;
+import ru.tw1911.testforsber.elements.TrelloList;
 import ru.tw1911.testforsber.elements.WebButton;
 import ru.tw1911.testforsber.elements.WebInput;
 
@@ -23,10 +23,10 @@ public class BoardPage extends AbstractPage {
 
     @FindBy(xpath = "//div[contains(@class,'list-content')]")
     @ElementTitle("List")
-    private List<WebElement> trelloLists;
+    private List<TrelloList> trelloLists;
 
     @PageAction("проверяет, что существует список с именем")
     public void checkListWithNameExists(String listName){
-        System.out.println(trelloLists.get(0).getText());
+        System.out.println(trelloLists.get(0).getName());
     }
 }

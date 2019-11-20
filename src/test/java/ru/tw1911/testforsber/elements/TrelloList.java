@@ -1,4 +1,4 @@
-package ru.tw1911.testforsber.pages;
+package ru.tw1911.testforsber.elements;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -10,6 +10,6 @@ public class TrelloList extends Element {
     }
 
     public String getName(){
-        return super.webElement.findElement(By.xpath(".//h2[contains(@class,'list-header-name')]")).getText();
+        return super.webElement.findElement(By.xpath(".//h2[contains(@class,'list-header-name')]")).getAttribute("innerText");//почему то getText не работает(
     }
 }
