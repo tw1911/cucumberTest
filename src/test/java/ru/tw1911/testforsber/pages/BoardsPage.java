@@ -36,7 +36,4 @@ public class BoardsPage extends AbstractPage{
         createBoardButton.click();
         stack.push(generatedString);
     }
-
-
-
 }
